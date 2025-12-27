@@ -1,0 +1,2 @@
+# todo-blue
+Training projects
