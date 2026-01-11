@@ -5,6 +5,8 @@ Projet To-Do List réalisé pour s’entraîner en HTML / CSS / JavaScript.
 
 Aucune dépendance, build, serveur : ça fonctionne dans un navigateur.
 
+**Projet sans IA**
+
 ## 📌 Notes
 
 Ce projet est fait **pour l’apprentissage**, pas pour la production.
