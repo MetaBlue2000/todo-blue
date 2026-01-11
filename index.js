@@ -20,6 +20,9 @@ let titleList = [
     "Un nouvel objectif en tête ?",
     "Qu’aimerais-tu noter ici ?"
 ]
+
+// Check if there aren't tasks in the localStorage
+// Select random title
 window.addEventListener('DOMContentLoaded', () => {
     let titleSelected = Math.floor(Math.random() * titleList.length);
     titleRoller.innerHTML = titleList[titleSelected]
@@ -28,17 +31,15 @@ window.addEventListener('DOMContentLoaded', () => {
     } else {
         savedTasks = true
     }
+    tasksInMemory()
+    //DEBUG
     if (savedTasks == true) {
         console.log(localStorage.getItem('tasks'))
     }
 })
 
-// Check if there aren't tasks in the localStorage
-//function isExist
-
-
 // Add tasks by input
-function newTask(content, priority) {
+function newTask(content, saveIn) {
     const input = document.createElement('input')
     input.type = 'checkbox'
     input.id = taskId
@@ -48,25 +49,33 @@ function newTask(content, priority) {
     const container = document.createElement('div')
     container.id = `task` + input.id
 
-    localStorage.setItem('tasks', `${localStorage.getItem('tasks')}|&|${content}`)
+    if (saveIn == true) {
+        let contentURI = encodeURIComponent(content)
+        if (savedTasks == false) {
+            localStorage.setItem('tasks', `${contentURI}`)
+            savedTasks = true
+        } else {
+            localStorage.setItem('tasks', `${localStorage.getItem('tasks')}|&|${contentURI}`)
+        }
+    }
+
     container.append(input, label)
     boxList.appendChild(container)
     taskId++
 }
 
-
+//Submit a task by Enter key or on click on the btn
 btnNewTask.addEventListener('click', (e) => {
     switch (inputTask.value) {
         case '':
             console.warn('Input vide')
             break;
         default:
-            newTask(inputTask.value)
+            newTask(inputTask.value, true)
             inputTask.value = ''
     }
 
 })
-
 inputTask.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
         switch (inputTask.value) {
@@ -74,11 +83,25 @@ inputTask.addEventListener('keydown', (e) => {
                 console.warn('Input vide')
                 break;
             default:
-                newTask(inputTask.value)
+                newTask(inputTask.value, true)
                 inputTask.value = ''
         }
     }
 })
+
+//Reader
+function tasksInMemory() {
+    let tasks = localStorage.getItem('tasks')
+    if (tasks == null) {
+        return;
+    } else {
+        let taskURI = decodeURIComponent(tasks)
+        let Tasks = taskURI.split('|&|')
+        for (let task of Tasks) {
+            newTask(task, false)
+        }
+    }
+}
 
 // Delete all tasks in local storage
 btnDelMemory.addEventListener('click', (e) => {
